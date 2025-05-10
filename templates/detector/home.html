@@ -1,0 +1,306 @@
+{% extends 'detector/base.html' %}
+
+{% block title %}Home - Financial Fraud Detection{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row mb-5" data-aos="fade-up">
+    <div class="col-lg-6 d-flex flex-column justify-content-center">
+        <h1 class="display-4 fw-bold mb-3">Protect Your Business from Financial Fraud</h1>
+        <p class="fs-5 mb-4 text-muted">Our advanced machine learning algorithm helps you detect potentially fraudulent transactions in real-time, with 99.9% accuracy. Stay one step ahead of fraudsters with intelligent fraud detection.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a href="{% url 'detect_fraud' %}" class="btn btn-primary btn-lg px-4 me-md-2">
+                <i class="fas fa-search me-2"></i>Detect Fraud
+            </a>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="fas fa-chart-line me-2"></i>View Dashboard
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+        <img src="https://img.freepik.com/free-vector/global-data-security-personal-data-security-cyber-data-security-online-concept-illustration-internet-security-information-privacy-protection_1150-37336.jpg" alt="Fraud Detection" class="img-fluid rounded shadow-lg">
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="row mb-5 py-5 bg-light rounded-3" data-aos="fade-up">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold">Our Impact</h2>
+        <p class="lead text-muted">Protecting businesses worldwide from financial fraud since 2020</p>
+    </div>
+    <div class="col-md-3 text-center mb-4">
+        <div class="card border-0 bg-transparent">
+            <div class="card-body">
+                <div class="display-4 fw-bold text-primary mb-2">
+                    <span class="counter" data-count="99.9">99.9</span>%
+                </div>
+                <p class="text-muted">Detection Accuracy</p>
+                <small class="text-muted">Based on 2023 performance data</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 text-center mb-4">
+        <div class="card border-0 bg-transparent">
+            <div class="card-body">
+                <div class="display-4 fw-bold text-primary mb-2">
+                    <span class="counter" data-count="50">50</span>M+
+                </div>
+                <p class="text-muted">Transactions Analyzed</p>
+                <small class="text-muted">Daily transaction volume</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 text-center mb-4">
+        <div class="card border-0 bg-transparent">
+            <div class="card-body">
+                <div class="display-4 fw-bold text-primary mb-2">
+                    $<span class="counter" data-count="2500">2500</span>M
+                </div>
+                <p class="text-muted">Fraud Prevented</p>
+                <small class="text-muted">In the last 12 months</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 text-center mb-4">
+        <div class="card border-0 bg-transparent">
+            <div class="card-body">
+                <div class="display-4 fw-bold text-primary mb-2">
+                    <span class="counter" data-count="150000">150000</span>+
+                </div>
+                <p class="text-muted">Active Clients</p>
+                <small class="text-muted">Across 50+ countries</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Statistics Row -->
+<div class="row mb-5" data-aos="fade-up" data-aos-delay="100">
+    <div class="col-md-3 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <i class="fas fa-bolt text-primary fa-2x mb-3"></i>
+                <h3 class="fw-bold text-primary">
+                    <span class="counter" data-count="50">50</span>ms
+                </h3>
+                <p class="text-muted mb-0">Average Response Time</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <i class="fas fa-shield-alt text-primary fa-2x mb-3"></i>
+                <h3 class="fw-bold text-primary">
+                    <span class="counter" data-count="99.99">99.99</span>%
+                </h3>
+                <p class="text-muted mb-0">System Uptime</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <i class="fas fa-chart-line text-primary fa-2x mb-3"></i>
+                <h3 class="fw-bold text-primary">
+                    <span class="counter" data-count="95">95</span>%
+                </h3>
+                <p class="text-muted mb-0">Fraud Reduction Rate</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <i class="fas fa-clock text-primary fa-2x mb-3"></i>
+                <h3 class="fw-bold text-primary">
+                    <span class="counter" data-count="24">24</span>/7
+                </h3>
+                <p class="text-muted mb-0">Monitoring & Support</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="row mb-5" data-aos="fade-up">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold">How It Works</h2>
+        <p class="lead text-muted">Using advanced machine learning algorithms to detect suspicious activities</p>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100 border-0 shadow-sm dashboard-card">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-database text-primary fa-3x"></i>
+                </div>
+                <h4 class="card-title">Data Analysis</h4>
+                <p class="card-text text-muted">Our system analyzes transaction patterns from millions of data points to identify anomalies in real-time.</p>
+                <ul class="list-unstyled mt-3 text-start">
+                    <li><i class="fas fa-check text-success me-2"></i>Real-time monitoring</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Pattern recognition</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Historical analysis</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 border-0 shadow-sm dashboard-card">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-brain text-primary fa-3x"></i>
+                </div>
+                <h4 class="card-title">Machine Learning</h4>
+                <p class="card-text text-muted">Using advanced algorithms that continuously learn and improve from new transactions.</p>
+                <ul class="list-unstyled mt-3 text-start">
+                    <li><i class="fas fa-check text-success me-2"></i>Adaptive learning</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Predictive analytics</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Behavioral analysis</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100 border-0 shadow-sm dashboard-card">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-bell text-primary fa-3x"></i>
+                </div>
+                <h4 class="card-title">Real-time Alerts</h4>
+                <p class="card-text text-muted">Get instant notifications about suspicious transactions with detailed risk assessment.</p>
+                <ul class="list-unstyled mt-3 text-start">
+                    <li><i class="fas fa-check text-success me-2"></i>Instant notifications</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Risk scoring</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Detailed reports</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5" data-aos="fade-up">
+    <div class="col-lg-6 mb-4 mb-lg-0">
+        <h2 class="fw-bold mb-3">Comprehensive Fraud Protection</h2>
+        <p class="mb-4 text-muted">Our system is designed to protect your business from various types of financial fraud:</p>
+        
+        <div class="mb-4" data-aos="fade-right" data-aos-delay="100">
+            <div class="d-flex align-items-center mb-3">
+                <div class="bg-primary p-3 rounded-circle me-3">
+                    <i class="fas fa-credit-card text-white"></i>
+                </div>
+                <div>
+                    <h5 class="mb-1">Credit Card Fraud</h5>
+                    <p class="mb-0 text-muted">Detect unauthorized transactions, stolen card information, and suspicious purchasing patterns.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-4" data-aos="fade-right" data-aos-delay="200">
+            <div class="d-flex align-items-center mb-3">
+                <div class="bg-primary p-3 rounded-circle me-3">
+                    <i class="fas fa-user-secret text-white"></i>
+                </div>
+                <div>
+                    <h5 class="mb-1">Identity Theft</h5>
+                    <p class="mb-0 text-muted">Identify potential identity theft attempts through unusual account activities.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-4" data-aos="fade-right" data-aos-delay="300">
+            <div class="d-flex align-items-center mb-3">
+                <div class="bg-primary p-3 rounded-circle me-3">
+                    <i class="fas fa-globe text-white"></i>
+                </div>
+                <div>
+                    <h5 class="mb-1">Cross-border Fraud</h5>
+                    <p class="mb-0 text-muted">Monitor international transactions for suspicious behavior and unusual patterns.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+        <div class="card bg-primary text-white">
+            <div class="card-body p-4">
+                <h3 class="card-title fw-bold mb-3">Ready to Get Started?</h3>
+                <p class="card-text mb-4">Protect your business from financial fraud with our advanced detection system. Try our detection tool or explore the dashboard.</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'detect_fraud' %}" class="btn btn-light text-primary">
+                        <i class="fas fa-search me-2"></i>Try Fraud Detection
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-light">
+                        <i class="fas fa-chart-line me-2"></i>Explore Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="row mb-5" data-aos="fade-up">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold">What Our Clients Say</h2>
+        <p class="lead text-muted">Trusted by businesses worldwide</p>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-quote-left text-primary fa-2x"></i>
+                </div>
+                <p class="card-text">"This system has saved us thousands in potential fraud losses. The real-time alerts are invaluable."</p>
+                <div class="d-flex align-items-center mt-3">
+                    <div class="flex-shrink-0">
+                        <img src="https://ui-avatars.com/api/?name=John+Smith&background=random" alt="John Smith" class="rounded-circle" width="50">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">John Smith</h6>
+                        <small class="text-muted">CEO, Tech Solutions Inc</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-quote-left text-primary fa-2x"></i>
+                </div>
+                <p class="card-text">"The machine learning capabilities are impressive. It keeps getting better at detecting unusual patterns."</p>
+                <div class="d-flex align-items-center mt-3">
+                    <div class="flex-shrink-0">
+                        <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=random" alt="Sarah Johnson" class="rounded-circle" width="50">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Sarah Johnson</h6>
+                        <small class="text-muted">CTO, Global Payments</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-quote-left text-primary fa-2x"></i>
+                </div>
+                <p class="card-text">"Implementation was smooth and the support team is extremely responsive. Highly recommended!"</p>
+                <div class="d-flex align-items-center mt-3">
+                    <div class="flex-shrink-0">
+                        <img src="https://ui-avatars.com/api/?name=Michael+Chen&background=random" alt="Michael Chen" class="rounded-circle" width="50">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Michael Chen</h6>
+                        <small class="text-muted">CFO, Retail Group</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} 

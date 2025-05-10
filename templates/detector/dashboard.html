@@ -1,0 +1,193 @@
+{% extends 'detector/base.html' %}
+
+{% block title %}Dashboard - Financial Fraud Detection{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5 fw-bold mb-3">Fraud Detection Dashboard</h1>
+        <p class="lead">Visualizing transaction data and fraud patterns</p>
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if error %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error Loading Dashboard</h4>
+        <p>{{ error }}</p>
+        <hr>
+        <p class="mb-0">Please try refreshing the page. If the problem persists, contact support.</p>
+    </div>
+{% else %}
+    <!-- Stats Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3 mb-md-0">
+            <div class="card border-0 shadow-sm h-100 dashboard-card">
+                <div class="card-body text-center">
+                    <h3 class="display-6 fw-bold text-primary mb-0">{{ stats.total_transactions }}</h3>
+                    <p class="text-muted mb-0">Total Transactions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3 mb-md-0">
+            <div class="card border-0 shadow-sm h-100 dashboard-card">
+                <div class="card-body text-center">
+                    <h3 class="display-6 fw-bold text-danger mb-0">{{ stats.total_fraud }}</h3>
+                    <p class="text-muted mb-0">Fraudulent Transactions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3 mb-md-0">
+            <div class="card border-0 shadow-sm h-100 dashboard-card">
+                <div class="card-body text-center">
+                    <h3 class="display-6 fw-bold text-warning mb-0">{{ stats.fraud_percentage }}%</h3>
+                    <p class="text-muted mb-0">Fraud Percentage</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 dashboard-card">
+                <div class="card-body text-center">
+                    <h3 class="display-6 fw-bold text-success mb-0">${{ stats.avg_transaction }}</h3>
+                    <p class="text-muted mb-0">Average Transaction</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if category_viz and amount_viz and time_viz and heatmap_viz and geo_viz %}
+        <!-- Visualization - Fraud by Category -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100 dashboard-card">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="mb-0"><i class="fas fa-tags me-2 text-primary"></i>Fraud by Category</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ category_viz }}" alt="Fraud by Category" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization - Fraud by Amount -->
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100 dashboard-card">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="mb-0"><i class="fas fa-dollar-sign me-2 text-success"></i>Fraud by Amount</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ amount_viz }}" alt="Fraud by Amount" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualization - Fraud by Time of Day -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm dashboard-card">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="mb-0"><i class="fas fa-clock me-2 text-warning"></i>Fraud by Time of Day</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ time_viz }}" alt="Fraud by Time of Day" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualization - Heat Map -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm dashboard-card">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="mb-0"><i class="fas fa-calendar-alt me-2 text-danger"></i>Fraud Heatmap by Day and Hour</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ heatmap_viz }}" alt="Fraud Heatmap" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualization - Geographic Distribution -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm dashboard-card">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2 text-info"></i>Geographic Distribution of Fraud</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ geo_viz }}" alt="Geographic Distribution" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm dashboard-card">
+                    <div class="card-header bg-white border-bottom-0">
+                        <h5 class="mb-0"><i class="fas fa-lightbulb me-2 text-warning"></i>Key Insights</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="p-3 bg-light rounded">
+                                    <h6 class="mb-2"><i class="fas fa-exclamation-triangle text-danger me-2"></i>High-Risk Categories</h6>
+                                    <p class="mb-0 small">Shopping online and travel show the highest fraud rates, suggesting stricter verification protocols for these categories.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="p-3 bg-light rounded">
+                                    <h6 class="mb-2"><i class="fas fa-clock text-warning me-2"></i>Time-Based Patterns</h6>
+                                    <p class="mb-0 small">Late night hours (1AM-5AM) show elevated fraud rates, indicating a need for enhanced monitoring during these hours.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light rounded">
+                                    <h6 class="mb-2"><i class="fas fa-dollar-sign text-success me-2"></i>Amount Thresholds</h6>
+                                    <p class="mb-0 small">Transactions over $500 have significantly higher fraud rates, suggesting additional verification for large purchases.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">No Visualization Data Available</h4>
+            <p>We couldn't generate the visualizations at this time. This could be because:</p>
+            <ul>
+                <li>There are no transactions in the database yet</li>
+                <li>The data file is missing or corrupted</li>
+                <li>There was an error processing the data</li>
+            </ul>
+            <hr>
+            <p class="mb-0">Try adding some transactions first or contact support if the problem persists.</p>
+        </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <a href="{% url 'detect_fraud' %}" class="btn btn-primary btn-lg me-2">
+                <i class="fas fa-search me-2"></i>Detect Fraud
+            </a>
+            <button class="btn btn-outline-secondary btn-lg" onclick="window.print()">
+                <i class="fas fa-print me-2"></i>Print Dashboard
+            </button>
+        </div>
+    </div>
+{% endif %}
+{% endblock %} 

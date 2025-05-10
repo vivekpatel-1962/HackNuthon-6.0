@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Transaction History</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th>Risk Score</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                    <td>${{ transaction.amount }}</td>
+                    <td>
+                        {% if transaction.status == 'SUCCESS' %}
+                            <span class="badge bg-success">Success</span>
+                        {% elif transaction.status == 'FAILED' %}
+                            <span class="badge bg-danger">Failed</span>
+                        {% else %}
+                            <span class="badge bg-warning">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ transaction.location }}</td>
+                    <td>
+                        {% if transaction.fraud_detection %}
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar {% if transaction.fraud_detection.risk_percentage > 75 %}bg-danger{% elif transaction.fraud_detection.risk_percentage > 50 %}bg-warning{% else %}bg-success{% endif %}"
+                                     role="progressbar"
+                                     style="width: {{ transaction.fraud_detection.risk_percentage }}%"
+                                     aria-valuenow="{{ transaction.fraud_detection.risk_percentage }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                    {{ transaction.fraud_detection.risk_percentage|floatformat:1 }}%
+                                </div>
+                            </div>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#transaction-{{ transaction.id }}">
+                            View Details
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="transaction-{{ transaction.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Transaction Details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Transaction ID:</strong> {{ transaction.id }}</p>
+                                        <p><strong>Date:</strong> {{ transaction.created_at }}</p>
+                                        <p><strong>Amount:</strong> ${{ transaction.amount }}</p>
+                                        <p><strong>Location:</strong> {{ transaction.location }}</p>
+                                        <p><strong>IP Address:</strong> {{ transaction.ip_address }}</p>
+                                        {% if transaction.fraud_detection %}
+                                            <hr>
+                                            <h6>Fraud Detection Details</h6>
+                                            <p><strong>Risk Score:</strong> {{ transaction.fraud_detection.risk_percentage|floatformat:1 }}%</p>
+                                            <p><strong>Failed Login Attempts:</strong> {{ transaction.fraud_detection.failed_login_attempts }}</p>
+                                            <p><strong>Detection Time:</strong> {{ transaction.fraud_detection.detection_time }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No transactions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{% url 'make_transaction' %}" class="btn btn-primary">Make New Transaction</a>
+    </div>
+</div>
+{% endblock %} 

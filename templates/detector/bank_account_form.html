@@ -1,0 +1,158 @@
+{% extends 'detector/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{{ title }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- Account Holder Name -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.account_holder_name.id_for_label }}" class="form-label">
+                                    Account Holder Name
+                                </label>
+                                {{ form.account_holder_name }}
+                                {% if form.account_holder_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.account_holder_name.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Account Number -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.account_number.id_for_label }}" class="form-label">
+                                    Account Number
+                                </label>
+                                {{ form.account_number }}
+                                {% if form.account_number.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.account_number.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Bank Name -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.bank_name.id_for_label }}" class="form-label">
+                                    Bank Name
+                                </label>
+                                {{ form.bank_name }}
+                                {% if form.bank_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.bank_name.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- IFSC Code -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.ifsc_code.id_for_label }}" class="form-label">
+                                    IFSC Code
+                                </label>
+                                {{ form.ifsc_code }}
+                                {% if form.ifsc_code.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.ifsc_code.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Branch Name -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.branch_name.id_for_label }}" class="form-label">
+                                    Branch Name
+                                </label>
+                                {{ form.branch_name }}
+                                {% if form.branch_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.branch_name.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Mobile Number -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.mobile_number.id_for_label }}" class="form-label">
+                                    Mobile Number
+                                </label>
+                                {{ form.mobile_number }}
+                                {% if form.mobile_number.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.mobile_number.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Is Primary -->
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    {{ form.is_primary }}
+                                    <label class="form-check-label" for="{{ form.is_primary.id_for_label }}">
+                                        Set as primary account
+                                    </label>
+                                </div>
+                                {% if form.is_primary.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.is_primary.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Account
+                            </button>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+}
+
+.form-control:focus {
+    border-color: #4361ee;
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+}
+</style>
+{% endblock %} 

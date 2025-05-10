@@ -1,0 +1,634 @@
+{% extends 'detector/base.html' %}
+
+{% block title %}Profile - {{ user.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ---------------------------------------------- */
+    /*             Color Palette                      */
+    /* ---------------------------------------------- */
+    :root {
+        --primary-color: #4361ee;    /* Primary Blue */
+        --secondary-color: #3f37c9;  /* Deep Blue */
+        --accent-color: #4895ef;     /* Light Blue */
+        --success-color: #38b000;    /* Green */
+        --danger-color: #d00000;     /* Red */
+        --warning-color: #ff9e00;    /* Orange */
+        --text-color: #2b2d42;       /* Dark Text */
+        --light-bg: #f8f9fa;         /* Light Background */
+        --card-shadow: 0 10px 20px rgba(67, 97, 238, 0.1);
+    }
+
+    /* Override Bootstrap classes with our new palette */
+    .bg-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+    }
+    .text-primary {
+        color: var(--primary-color) !important;
+    }
+    .btn-primary {
+        background: var(--primary-color);
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+    .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+    }
+    .btn-outline-primary:hover {
+        background: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    /* Light variants for cards */
+    .bg-light-primary {
+        background-color: rgba(67, 97, 238, 0.1) !important;
+    }
+    .bg-light-success {
+        background-color: rgba(56, 176, 0, 0.1) !important;
+    }
+    .bg-light-danger {
+        background-color: rgba(208, 0, 0, 0.1) !important;
+    }
+
+    /* Layout & Animations */
+    body {
+        color: var(--text-color);
+        background-color: var(--light-bg);
+    }
+
+    .fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        border-radius: 12px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow);
+    }
+    .stat-card .icon-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Account Cards */
+    .account-card {
+        border-radius: 12px;
+        border: none;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    .account-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        gap: 15px;
+    }
+    .quick-actions .btn {
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .quick-actions .btn i {
+        font-size: 1.1em;
+    }
+
+    /* Transaction Table */
+    .transaction-table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .transaction-table th {
+        background-color: var(--light-bg);
+        font-weight: 600;
+        border: none;
+        padding: 1rem;
+    }
+    .transaction-table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+    .transaction-amount {
+        font-weight: 600;
+        font-family: 'Roboto Mono', monospace;
+    }
+    .amount-positive {
+        color: var(--success-color);
+    }
+    .amount-negative {
+        color: var(--danger-color);
+    }
+
+    /* Activity Icons */
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+    }
+
+    /* Card Headers */
+    .card-header {
+        background: transparent;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1.25rem;
+    }
+    .card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.5em 1em;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 fade-in">
+    <!-- User Overview Section -->
+    <div class="row mb-4" data-aos="fade-up">
+        <!-- Stat Card: Welcome -->
+        <div class="col-md-3 mb-3 mb-md-0">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle me-3">
+                            <i class="fas fa-user fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1">Welcome back,</h6>
+                            <h4 class="mb-0 fw-bold">{{ user.username }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Stat Card: Total Balance -->
+        <div class="col-md-3 mb-3 mb-md-0">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle me-3">
+                            <i class="fas fa-wallet fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1">Total Balance</h6>
+                            <h4 class="mb-0 fw-bold">₹{{ bank_accounts.first.current_balance|floatformat:2 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Stat Card: Recent Activity -->
+        <div class="col-md-3 mb-3 mb-md-0">
+            <div class="card stat-card" style="background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle me-3">
+                            <i class="fas fa-exchange-alt fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1 text-white">Recent Activity</h6>
+                            <h4 class="mb-0 fw-bold text-white">{{ sent_transactions.count }} transactions</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Stat Card: Failed Logins -->
+        <div class="col-md-3">
+            <div class="card stat-card" style="background: linear-gradient(135deg, var(--danger-color), #b30000);">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle me-3">
+                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="card-title mb-1 text-white">Failed Logins</h6>
+                            <h4 class="mb-0 fw-bold text-white">{{ failed_login_count }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="d-flex quick-actions mb-4" data-aos="fade-up" data-aos-delay="100">
+        <a href="{% url 'make_transaction' %}" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i>Send Money
+        </a>
+        <a href="{% url 'add_bank_account' %}" class="btn btn-outline-primary">
+            <i class="fas fa-plus"></i>Add Account
+        </a>
+        <a href="{% url 'detect_fraud' %}" class="btn btn-outline-primary">
+            <i class="fas fa-shield-alt"></i>Fraud Check
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Bank Accounts Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">
+                        <i class="fas fa-university text-primary me-2"></i>Bank Accounts
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if bank_accounts %}
+                        {% for account in bank_accounts %}
+                            <div class="account-card mb-3 p-3 position-relative">
+                                {% if account.is_primary %}
+                                    <span class="badge bg-primary primary-badge">Primary</span>
+                                {% endif %}
+                                <h6 class="mb-2">{{ account.bank_name }}</h6>
+                                <p class="mb-2 text-muted">
+                                    <small>AC: •••• {{ account.account_number|slice:"-4:" }}</small>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">
+                                        ₹{{ account.current_balance|floatformat:2 }}
+                                    </span>
+                                    <div class="btn-group btn-group-sm">
+                                        {% if not account.is_primary %}
+                                            <form method="post" 
+                                                  action="{% url 'set_primary_account' account.pk %}" 
+                                                  class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-star"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                        <a href="{% url 'edit_bank_account' account.pk %}" 
+                                           class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="post" 
+                                              action="{% url 'delete_bank_account' account.pk %}" 
+                                              class="d-inline" 
+                                              onsubmit="return confirm('Are you sure you want to delete this account?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-university fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No bank accounts added yet</p>
+                            <a href="{% url 'add_bank_account' %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus me-2"></i>Add Bank Account
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Section -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history text-primary me-2"></i>Recent Transactions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs mb-3" id="transactionTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="sent-tab" data-bs-toggle="tab" 
+                               href="#sent" role="tab" aria-controls="sent">
+                                <i class="fas fa-arrow-up me-2"></i>Sent
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="received-tab" data-bs-toggle="tab" 
+                               href="#received" role="tab" aria-controls="received">
+                                <i class="fas fa-arrow-down me-2"></i>Received
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- Sent Transactions -->
+                        <div class="tab-pane fade show active" id="sent" role="tabpanel" 
+                             aria-labelledby="sent-tab">
+                            {% if sent_transactions %}
+                                <div class="table-responsive transaction-table">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>To</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for transaction in sent_transactions %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="activity-icon bg-light-danger text-danger me-3">
+                                                                <i class="fas fa-arrow-up"></i>
+                                                            </div>
+                                                            {{ transaction.transaction_date|date:"M d, Y" }}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{ transaction.receiver_bank_name }}<br>
+                                                        <small class="text-muted">
+                                                            •••• {{ transaction.receiver_account_number|slice:"-4:" }}
+                                                        </small>
+                                                    </td>
+                                                    <td>
+                                                        <span class="transaction-amount amount-negative">
+                                                            -₹{{ transaction.amount|floatformat:2 }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {% if transaction.status == 'completed' %}
+                                                            <span class="badge bg-success">Success</span>
+                                                        {% elif transaction.status == 'failed' %}
+                                                            <span class="badge bg-danger">Failed</span>
+                                                        {% else %}
+                                                            <span class="badge bg-warning">Pending</span>
+                                                        {% endif %}
+                                                        
+                                                        <!-- Fraud Risk Indicator -->
+                                                        {% if transaction.risk_percentage > 0 %}
+                                                            <div class="mt-1">
+                                                                <div class="progress" style="height: 6px;">
+                                                                    <div class="progress-bar {% if transaction.risk_percentage > 75 %}bg-danger{% elif transaction.risk_percentage > 50 %}bg-warning{% else %}bg-success{% endif %}"
+                                                                        role="progressbar"
+                                                                        style="width: {{ transaction.risk_percentage }}%"
+                                                                        aria-valuenow="{{ transaction.risk_percentage }}"
+                                                                        aria-valuemin="0"
+                                                                        aria-valuemax="100">
+                                                                    </div>
+                                                                </div>
+                                                                <small class="text-muted">Risk: {{ transaction.risk_percentage|floatformat:1 }}%</small>
+                                                            </div>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#transaction-{{ transaction.id }}">
+                                                            View Details
+                                                        </button>
+                                                        
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="transaction-{{ transaction.id }}" tabindex="-1" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Transaction Details</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p><strong>Transaction ID:</strong> {{ transaction.reference_id }}</p>
+                                                                        <p><strong>Date:</strong> {{ transaction.transaction_date }}</p>
+                                                                        <p><strong>Amount:</strong> ₹{{ transaction.amount|floatformat:2 }}</p>
+                                                                        <p><strong>Status:</strong> {{ transaction.status|title }}</p>
+                                                                        <p><strong>Receiver Bank:</strong> {{ transaction.receiver_bank_name }}</p>
+                                                                        <p><strong>Account Number:</strong> •••• {{ transaction.receiver_account_number|slice:"-4:" }}</p>
+                                                                        {% if transaction.remarks %}
+                                                                            <p><strong>Remarks:</strong> {{ transaction.remarks }}</p>
+                                                                        {% endif %}
+                                                                        
+                                                                        {% if transaction.risk_percentage > 0 %}
+                                                                            <hr>
+                                                                            <h6>Security Information</h6>
+                                                                            <p><strong>Risk Score:</strong> {{ transaction.risk_percentage|floatformat:1 }}%</p>
+                                                                            <p><strong>Device:</strong> {{ transaction.device_id|default:"Unknown" }}</p>
+                                                                            <p><strong>IP Address:</strong> {{ transaction.ip_address|default:"Unknown" }}</p>
+                                                                            <p><strong>Failed Login Attempts:</strong> {{ transaction.failed_login_attempts }}</p>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td colspan="6" class="text-center">No transactions found.</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-paper-plane fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">No sent transactions yet</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Received Transactions -->
+                        <div class="tab-pane fade" id="received" role="tabpanel" 
+                             aria-labelledby="received-tab">
+                            {% if received_transactions %}
+                                <div class="table-responsive transaction-table">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>From</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for transaction in received_transactions %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="activity-icon bg-light-success text-success me-3">
+                                                                <i class="fas fa-arrow-down"></i>
+                                                            </div>
+                                                            {{ transaction.transaction_date|date:"M d, Y" }}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{ transaction.sender.bank_name }}<br>
+                                                        <small class="text-muted">
+                                                            •••• {{ transaction.sender.account_number|slice:"-4:" }}
+                                                        </small>
+                                                    </td>
+                                                    <td>
+                                                        <span class="transaction-amount amount-positive">
+                                                            +₹{{ transaction.amount|floatformat:2 }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-{{ transaction.status|yesno:'success,warning' }}">
+                                                            {{ transaction.status|title }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">No received transactions yet</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login History -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield-alt text-primary me-2"></i>Security Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if login_history %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>IP Address</th>
+                                        <th>Device ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for login in login_history %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="activity-icon bg-light-info text-info me-3">
+                                                        <i class="fas fa-sign-in-alt"></i>
+                                                    </div>
+                                                    {{ login.login_time|date:"M d, Y h:i A" }} IST
+                                                </div>
+                                            </td>
+                                            <td>{{ login.ip_address }}</td>
+                                            <td>
+                                                <span class="text-muted">
+                                                    {{ login.device_id|truncatechars:12 }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No login history available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add the failed login attempts section -->
+    <div class="row mb-4" data-aos="fade-up">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-exclamation-triangle text-danger me-2"></i> Failed Login Attempts</h5>
+                </div>
+                <div class="card-body">
+                    {% if failed_logins %}
+                        <div class="table-responsive">
+                            <table class="table table-hover transaction-table">
+                                <thead>
+                                    <tr>
+                                        <th>Attempt Time</th>
+                                        <th>IP Address</th>
+                                        <th>Device</th>
+                                        <th>Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for attempt in failed_logins %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="activity-icon bg-light-danger text-danger me-3">
+                                                        <i class="fas fa-ban"></i>
+                                                    </div>
+                                                    {{ attempt.attempt_time|date:"M d, Y h:i A" }} IST
+                                                </div>
+                                            </td>
+                                            <td>{{ attempt.ip_address }}</td>
+                                            <td>
+                                                <span class="text-muted">
+                                                    {{ attempt.device_id|truncatechars:12 }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-danger">{{ attempt.reason }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-center mb-0">No failed login attempts recorded.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,275 @@
+{% extends 'detector/base.html' %}
+
+{% block title %}Make Transaction{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Make a Transaction</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate id="transactionForm">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.receiver_account_number.id_for_label }}" class="form-label">Receiver's Account Number</label>
+                            {{ form.receiver_account_number }}
+                            {% if form.receiver_account_number.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.receiver_account_number.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.receiver_bank_name.id_for_label }}" class="form-label">Receiver's Bank Name</label>
+                            {{ form.receiver_bank_name }}
+                            {% if form.receiver_bank_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.receiver_bank_name.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.receiver_ifsc_code.id_for_label }}" class="form-label">Receiver's IFSC Code</label>
+                            {{ form.receiver_ifsc_code }}
+                            {% if form.receiver_ifsc_code.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.receiver_ifsc_code.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <button type="button" class="btn btn-secondary mt-2" id="verifyAccount">Verify Account</button>
+                        </div>
+
+                        <!-- Account Holder Details Section -->
+                        <div id="accountHolderDetails" class="mb-4 d-none">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Account Holder Details</h5>
+                                    <div id="accountHolderInfo">
+                                        <!-- Details will be populated by JavaScript -->
+                                    </div>
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" type="checkbox" id="confirmDetails" required>
+                                        <label class="form-check-label" for="confirmDetails">
+                                            I confirm these are the correct account details
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.amount.id_for_label }}" class="form-label">Amount</label>
+                            {{ form.amount }}
+                            {% if form.amount.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.amount.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.remarks.id_for_label }}" class="form-label">Remarks (Optional)</label>
+                            {{ form.remarks }}
+                            {% if form.remarks.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.remarks.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Demo Mode Section -->
+                        <div class="card mb-3 border-info">
+                            <div class="card-header bg-info text-white">
+                                <div class="form-check">
+                                    {{ form.is_demo }}
+                                    <label class="form-check-label" for="is_demo">
+                                        Enable Demo Mode (Test with different IP addresses)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="collapse" id="demoOptions">
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i>
+                                        Demo mode allows you to test fraud detection with different risk scenarios.
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="demo_risk_level" class="form-label">Risk Level Simulation</label>
+                                        {{ form.demo_risk_level }}
+                                        <div class="form-text">
+                                            This will generate random IP addresses and device IDs based on the selected risk level.
+                                        </div>
+                                    </div>
+                                    <div id="demoDetails" class="alert alert-secondary d-none">
+                                        <strong>Demo Details:</strong>
+                                        <div id="demoIP"></div>
+                                        <div id="demoDevice"></div>
+                                        <div id="demoLocation"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Confirm Password</label>
+                            {{ form.password }}
+                            <div class="form-text">{{ form.password.help_text }}</div>
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" id="submitTransaction" disabled>Make Transaction</button>
+                            <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const verifyBtn = document.getElementById('verifyAccount');
+    const accountHolderDetails = document.getElementById('accountHolderDetails');
+    const accountHolderInfo = document.getElementById('accountHolderInfo');
+    const confirmDetails = document.getElementById('confirmDetails');
+    const submitBtn = document.getElementById('submitTransaction');
+    const form = document.getElementById('transactionForm');
+    const demoCheckbox = document.getElementById('is_demo');
+    const demoRiskLevel = document.getElementById('demo_risk_level');
+    const demoDetails = document.getElementById('demoDetails');
+    const demoIP = document.getElementById('demoIP');
+    const demoDevice = document.getElementById('demoDevice');
+    const demoLocation = document.getElementById('demoLocation');
+
+    // Enable submit button only when details are confirmed
+    confirmDetails.addEventListener('change', function() {
+        submitBtn.disabled = !this.checked;
+    });
+
+    verifyBtn.addEventListener('click', async function() {
+        const accountNumber = document.getElementById('{{ form.receiver_account_number.id_for_label }}').value;
+        const bankName = document.getElementById('{{ form.receiver_bank_name.id_for_label }}').value;
+        const ifscCode = document.getElementById('{{ form.receiver_ifsc_code.id_for_label }}').value;
+
+        if (!accountNumber || !bankName || !ifscCode) {
+            alert('Please fill in all account details first');
+            return;
+        }
+
+        try {
+            const response = await fetch('{% url "verify_account" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    account_number: accountNumber,
+                    bank_name: bankName,
+                    ifsc_code: ifscCode
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                accountHolderInfo.innerHTML = `
+                    <p class="mb-2"><strong>Account Holder:</strong> ${data.data.account_holder_name}</p>
+                    <p class="mb-2"><strong>Bank:</strong> ${data.data.bank_name}</p>
+                    <p class="mb-0"><strong>IFSC:</strong> ${data.data.ifsc_code}</p>
+                `;
+                accountHolderDetails.classList.remove('d-none');
+                confirmDetails.checked = false;
+                submitBtn.disabled = true;
+            } else {
+                accountHolderDetails.classList.add('d-none');
+                alert(data.message || 'Account not found. The transaction can still proceed, but please verify the details carefully.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error verifying account. Please try again.');
+        }
+    });
+
+    // Disable verification section when account details change
+    ['receiver_account_number', 'receiver_bank_name', 'receiver_ifsc_code'].forEach(field => {
+        document.getElementById(`{{ form.id_for_label }}${field}`).addEventListener('change', function() {
+            accountHolderDetails.classList.add('d-none');
+            confirmDetails.checked = false;
+            submitBtn.disabled = true;
+        });
+    });
+
+    // Function to generate random IP based on risk level
+    function generateDemoIP(riskLevel) {
+        switch(riskLevel) {
+            case 'low':
+                return `103.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+            case 'medium':
+                return `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+            case 'high':
+                const suspiciousIPs = [
+                    '185.156.73.54',
+                    '91.109.190.8',
+                    '103.234.220.197',
+                    '185.176.27.132'
+                ];
+                return suspiciousIPs[Math.floor(Math.random() * suspiciousIPs.length)];
+        }
+    }
+
+    // Function to generate random device ID
+    function generateDeviceID() {
+        return 'DEMO-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+
+    // Function to get location based on risk level
+    function getLocation(riskLevel) {
+        const locations = {
+            low: ['Mumbai', 'Delhi', 'Bangalore', 'Chennai'],
+            medium: ['Singapore', 'Dubai', 'Hong Kong', 'Tokyo'],
+            high: ['Lagos', 'Moscow', 'Unknown Location', 'Private Network']
+        };
+        return locations[riskLevel][Math.floor(Math.random() * locations[riskLevel].length)];
+    }
+
+    // Update demo details when risk level changes
+    function updateDemoDetails() {
+        if (demoCheckbox.checked) {
+            const riskLevel = demoRiskLevel.value;
+            demoIP.innerHTML = `<strong>IP Address:</strong> ${generateDemoIP(riskLevel)}`;
+            demoDevice.innerHTML = `<strong>Device ID:</strong> ${generateDeviceID()}`;
+            demoLocation.innerHTML = `<strong>Location:</strong> ${getLocation(riskLevel)}`;
+            demoDetails.classList.remove('d-none');
+        } else {
+            demoDetails.classList.add('d-none');
+        }
+    }
+
+    demoCheckbox.addEventListener('change', updateDemoDetails);
+    demoRiskLevel.addEventListener('change', updateDemoDetails);
+});
+</script>
+{% endblock %}
+{% endblock %} 
